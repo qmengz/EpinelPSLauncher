@@ -87,7 +87,7 @@ public partial class LoggedInView : UserControl
             return;
         }
 
-        if (!OperatingSystem.IsWindows())
+        if (!OperatingSystem.IsWindows() || Configuration.Instance.DisableAC)
         {
             string newGameExectutable = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nikke.exe");
             string newGameDll = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Encoding.UTF8.GetString(Convert.FromBase64String("QUNFLUJhc2U2NC5kbGw=")));

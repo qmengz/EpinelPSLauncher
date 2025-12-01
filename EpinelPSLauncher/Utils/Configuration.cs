@@ -13,6 +13,7 @@ namespace EpinelPSLauncher.Utils
         public string GameResourcePath { get; set; } = "";
         public string WinePath { get; set; } = "/usr/bin/wine";
         public string WineTricksPath { get; set; } = "/usr/bin/winetricks";
+        public bool DisableAC { get; set; }
     }
 
     public class Configuration

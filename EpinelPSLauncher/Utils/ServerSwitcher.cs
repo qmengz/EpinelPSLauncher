@@ -139,7 +139,7 @@ namespace EpinelPSLauncher
             if (OperatingSystem.IsLinux())
             {
                 // for wine
-                hostsFilePath = gamePath + "/../../../windows/system32/drivers/etc/hosts";
+                hostsFilePath = gamePath + "/../../wine_prefix/drive_c/windows/system32/drivers/etc/hosts";
             }
 
             if (useOffical)

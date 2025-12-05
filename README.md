@@ -9,10 +9,12 @@ Discord server: https://discord.gg/Ztt6Y9vQjF
 This project is unfinished, especially the user interface. This project is provided "as is", I am not responsible for your account being banned if you choose to use this on the official server.
 I started developing this during the start of 2025, but decided to upload the code after working on other projects.
 
-
 ## Usage
-Download the [GitHub actions build](https://nightly.link/EpinelPS/EpinelPSLauncher/workflows/dotnet-desktop/main/Server%20and%20Server%20selector.zip).
-Currently, this launcher only works on Windows, but Linux support is coming soon.
+[Windows download link](https://nightly.link/EpinelPS/EpinelPSLauncher/workflows/build/master/Launcher_win-x64.zip).
+
+[Linux download link](https://nightly.link/EpinelPS/EpinelPSLauncher/workflows/build/master/Launcher_linux-x64.zip).
+
+Extract the zip file somewhere, and run EpinelPS.Desktop.exe (or EpinelPS.Desktop if on Linux). 
 
 ## Features
  - Run the game without any of the original launcher files

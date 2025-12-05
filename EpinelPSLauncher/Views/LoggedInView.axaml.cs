@@ -85,7 +85,7 @@ public partial class LoggedInView : UserControl
 
         if (!OperatingSystem.IsWindows() || Configuration.Instance.DisableAC)
         {
-            string newGameExectutable = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UnityInit.exe");
+            string newGameExectutable = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UnityInit.Dll");
             string newGameDll = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "HelperDll.dll");
             if (!File.Exists(newGameExectutable) || !File.Exists(newGameDll))
             {
@@ -101,7 +101,7 @@ public partial class LoggedInView : UserControl
             {
                 try
                 {
-                    File.Copy(newGameExectutable, executablePath, true);
+                    File.Copy(newGameExectutable, Path.Combine(Configuration.Instance.GamePath, @"NIKKE/game/nikkeBase.dll"), true);
                     File.Copy(newGameDll, Path.Combine(Configuration.Instance.GamePath + @"/NIKKE/game/" + Encoding.UTF8.GetString(Convert.FromBase64String("QW50aUNoZWF0RXhwZXJ0L0FDRS1CYXNlNjQuZGxs"))), true);
                 }
                 catch (Exception ex)

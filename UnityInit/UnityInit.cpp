@@ -4,10 +4,9 @@
 
 #include <windows.h>
 
-// TODO: is this signature correct?
-typedef int (*UnityMainFN) (HINSTANCE, LPSTR);
+typedef int (*UnityMainFN) (HINSTANCE, HINSTANCE, LPSTR, int);
 
-int WinMain(
+int DoInit(
     _In_           HINSTANCE hInstance,
     _In_opt_       HINSTANCE hPrevInstance,
     _In_           LPSTR     lpCmdLine,
@@ -29,5 +28,7 @@ int WinMain(
         return -1;
     }
 
-    return fn(hInstance, lpCmdLine);
+    int result = fn(hInstance, hPrevInstance, lpCmdLine, nShowCmd);
+
+    exit(result);
 }

@@ -9,7 +9,7 @@
 #include <windows.h>
 #include <cstdint>
 
-enum ACE_RESULT
+enum AntiLinuxResult
 {
 	ACE_OK = 0,
 	ACE_INVALID_ARGUMENT = 1,
@@ -60,6 +60,10 @@ void InitAceClient3()
 	// Not called in GameAssembly?, but called internally in InitAceClient4
 }
 
+/*
+ * V4
+*/
+
 struct System_String_o {
 
 };
@@ -71,17 +75,14 @@ struct AceSdk_ClientInitInfo_Fields {
 };
 
 
-struct AceSdk_AceClient_WrapperAceClient_Fields {
-	intptr_t ace_client;
-	struct AceSdk_AceClient_LogOnRoutine_o* log_on;
-	struct AceSdk_AceClient_TickRoutine_o* tick;
-	struct AceSdk_AceClient_LogOffRoutine_o* log_off;
-	struct AceSdk_AceClient_ExitProcessRoutine_o* exit_process;
-	struct AceSdk_AceClient_GetOptRoutine_o* get_optional_interface;
-};
+struct Client4 {
+	Client4* handle;
 
-struct AceSdk_AceClient_WrapperAceClient_o {
-	AceSdk_AceClient_WrapperAceClient_Fields fields;
+	AntiLinuxResult(*login) (_In_ Client4*, void* account_info);
+	AntiLinuxResult(*tick) (_In_ Client4*);
+	AntiLinuxResult(*logoff) (_In_ Client4*);
+	AntiLinuxResult(*exit) (_In_ Client4*);
+	void*(*get_optional_interface) (_In_ Client4*);
 };
 
 struct AceSdk_ClientOptional_WrappedOptional_Fields {
@@ -100,10 +101,11 @@ struct AceSdk_TssAntibot_WrappedTssAntibot_Fields {
 };
 
 // Static structures
-static AceSdk_AceClient_WrapperAceClient_Fields pclient;
+static Client4 pclient;
 
 static AceSdk_ClientOptional_WrappedOptional_Fields poptionalInterface;
 static AceSdk_TssAntibot_WrappedTssAntibot_Fields AntibotInterface;
+
 
 // Data
 static void* ExitCallback;
@@ -128,7 +130,7 @@ static void* AceClient_GetCustomInterface(void* ptr, int type)
 	return NULL;
 }
 
-static void AceClient_SetExitCb(void* ptr, void* exitCb, void* ctx)
+static void AceClient_SetExitCb(Client4*, void* exitCb, void* ctx)
 {
 	ExitCallback = exitCb;
 }
@@ -138,7 +140,7 @@ static void AceClient_SetExitCb(void* ptr, void* exitCb, void* ctx)
 /// </summary>
 /// <param name="ptr"></param>
 /// <returns></returns>
-static void* AceClient_Opt(void* ptr)
+static void* AceClient_Opt(Client4*)
 {
 	// get pointer to the optional interface
 	poptionalInterface.get_tss_antibot = (AceSdk_ClientOptional_GetTssAntibotRoutine_o*)AceClient_GetTssAntibot;
@@ -148,36 +150,123 @@ static void* AceClient_Opt(void* ptr)
 	return (void*)&poptionalInterface;
 }
 
-static ACE_RESULT AceClient_Logon(void* acePtr, void* account_info)
+static AntiLinuxResult AceClient_Logon(Client4* acePtr, void* account_info)
 {
 	return ACE_OK;
 }
 
-static void AceClient_Logoff(void* acePtr)
+static AntiLinuxResult AceClient_Logoff(Client4*)
 {
 	// does not appear to be called
-}
-
-static void AceClient_Tick(void* acePtr)
-{
-	// Called in AceClient.tick
-}
-
-ACE_RESULT InitAceClient4(AceSdk_ClientInitInfo_Fields* info, ULONG flags, AceSdk_AceClient_WrapperAceClient_Fields** client)
-{
-	MessageBox(NULL, TEXT("InitAceClient4 is unimplemented"), TEXT("Error"), MB_OK);
 	return ACE_OK;
 }
 
-ACE_RESULT InitAceClient5(AceSdk_ClientInitInfo_Fields* info, ULONG flags, AceSdk_AceClient_WrapperAceClient_Fields** client)
+static AntiLinuxResult AceClient_Tick(Client4*)
 {
-	pclient.ace_client = 123; // client handle
-	pclient.log_on = (AceSdk_AceClient_LogOnRoutine_o*)AceClient_Logon;
-	pclient.log_off = (AceSdk_AceClient_LogOffRoutine_o*)AceClient_Logoff;
-	pclient.get_optional_interface = (AceSdk_AceClient_GetOptRoutine_o*)AceClient_Opt;
-	pclient.tick = (AceSdk_AceClient_TickRoutine_o*)AceClient_Tick;
+	// Called in AceClient.tick
+	return ACE_OK;
+}
+
+AntiLinuxResult InitAceClient4(AceSdk_ClientInitInfo_Fields* info, ULONG flags, Client4** client)
+{
+	// used in older verisons
+	pclient.handle = &pclient; // client handle
+	pclient.login = AceClient_Logon;
+	pclient.logoff = AceClient_Logoff;
+	pclient.get_optional_interface = AceClient_Opt;
+	pclient.tick = AceClient_Tick;
 
 	*client = &pclient;
+	return ACE_OK;
+}
+
+/*
+ * V5
+*/
+
+typedef void* ANTILINUXHANDLE;
+#define AL_HANDLE (ANTILINUXHANDLE)123
+
+struct Client5FullPacket
+{
+
+};
+
+struct Client5FeaturePacket
+{
+
+};
+
+struct Client5Feature
+{
+
+};
+
+struct Client5 {
+	Client5* handle;
+	void* unused;
+
+	AntiLinuxResult(*logout) (_In_ Client5*);
+	AntiLinuxResult(*cleanup) (_In_ Client5*);
+	AntiLinuxResult(*get_packet) (_In_ Client5*, _Inout_ Client5FullPacket*);
+	AntiLinuxResult(*on_packet_rx) (_In_ Client5*, BYTE* data, int len);
+	AntiLinuxResult(*login) (_In_ Client5*, LPCWSTR account, int type, UINT worldId, LPCWSTR ticket);
+	AntiLinuxResult(*get_light_packet) (_In_ Client5*, _Inout_ Client5FeaturePacket*);
+	AntiLinuxResult(*on_light_packet_rx) (_In_ Client5*, Client5Feature*);
+};
+
+static Client5 client5;
+
+AntiLinuxResult Antilinux5_Logout(Client5* handle)
+{
+	return ACE_OK;
+}
+AntiLinuxResult Antilinux5_Cleanup(Client5* handle)
+{
+	return ACE_OK;
+}
+
+AntiLinuxResult Antilinux5_GetPacket(Client5* handle, _Inout_ Client5FullPacket*)
+{
+	MessageBoxA(NULL, "Warning: Networking related GetPacket function called.\n\nAnticheat is in use.", "Warning", MB_ICONWARNING);
+	return ACE_OK;
+}
+
+AntiLinuxResult Antilinux5_OnPacketRx(_In_ Client5*, BYTE* data, int len)
+{
+	MessageBoxA(NULL, "Warning: Networking related OnPacketRx function called.\n\nAnticheat is in use.", "Warning", MB_ICONWARNING);
+	return ACE_OK;
+}
+
+AntiLinuxResult Antilinux5_Login(_In_ Client5*, LPCWSTR account, int type, UINT worldId, LPCWSTR ticket)
+{
+	return ACE_OK;
+}
+
+AntiLinuxResult Antilinux5_GetLightPacket(_In_ Client5*, _Inout_ Client5FeaturePacket*)
+{
+	MessageBoxA(NULL, "Warning: Networking related GetLightPacket function called.\n\nAnticheat is in use.", "Warning", MB_ICONWARNING);
+	return ACE_OK;
+}
+
+AntiLinuxResult Antilinux5_OnLightPacketRx(_In_ Client5*, Client5Feature*)
+{
+	MessageBoxA(NULL, "Warning: Networking related OnLightPacketRx function called.\n\nAnticheat is in use.", "Warning", MB_ICONWARNING);
+	return ACE_OK;
+}
+
+AntiLinuxResult InitAceClient5(_In_ int version, _In_opt_ void* optional, _Out_ Client5** client)
+{
+	client5.handle = &client5;
+	client5.logout = Antilinux5_Logout;
+	client5.cleanup = Antilinux5_Cleanup;
+	client5.get_packet = Antilinux5_GetPacket;
+	client5.on_packet_rx = Antilinux5_OnPacketRx;
+	client5.login = Antilinux5_Login;
+	client5.get_light_packet = Antilinux5_GetLightPacket;
+	client5.on_light_packet_rx = Antilinux5_OnLightPacketRx;
+
+	*client = &client5;
 	return ACE_OK;
 }
 

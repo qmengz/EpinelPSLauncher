@@ -61,7 +61,7 @@ jobs:
       run: xcopy /s /e "${{ github.workspace }}\LauncherUtility\bin\Release\net10.0\win-x64\publish\" "${{ github.workspace }}\out\" && copy "${{ github.workspace }}\sail_api_impl64\x64\Release\sail_api_impl64.dll" "${{ github.workspace }}\out\sail_api_impl64.dll"
 
     - name: Copy additional files
-      run: copy "${{ github.workspace }}\HelperDll\x64\Release\HelperDll.dll" "${{ github.workspace }}\out\HelperDll.dll" && copy "${{ github.workspace }}\UnityInit\x64\Release\UnityInit.exe" "${{ github.workspace }}\out\UnityInit.exe"
+      run: copy "${{ github.workspace }}\HelperDll\x64\Release\HelperDll.dll" "${{ github.workspace }}\out\HelperDll.dll" && copy "${{ github.workspace }}\UnityInit\x64\Release\UnityInit.dll" "${{ github.workspace }}\out\UnityInit.dll"
   
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4

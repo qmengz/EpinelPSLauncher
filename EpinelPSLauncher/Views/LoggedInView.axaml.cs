@@ -85,7 +85,7 @@ public partial class LoggedInView : UserControl
 
         if (!OperatingSystem.IsWindows() || Configuration.Instance.DisableAC)
         {
-            string newGameExectutable = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UnityInit.Dll");
+            string newGameExectutable = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UnityInit.dll");
             string newGameDll = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "HelperDll.dll");
             if (!File.Exists(newGameExectutable) || !File.Exists(newGameDll))
             {
